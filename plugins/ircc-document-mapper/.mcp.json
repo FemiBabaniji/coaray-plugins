@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "coaray-ircc-intake": {
-      "command": "node",
-      "args": ["./runtime/ircc-intake-mcp.mjs"],
-      "cwd": "."
-    }
-  }
-}

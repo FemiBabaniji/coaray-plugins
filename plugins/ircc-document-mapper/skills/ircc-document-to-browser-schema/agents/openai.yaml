@@ -1,6 +1,0 @@
-interface:
-  display_name: "IRCC Document Mapper"
-  short_description: "Map documents into browser-ready IRCC JSON"
-  default_prompt: "Use $ircc-document-to-browser-schema to map these documents into a validated IRCC semantic intake bundle."
-policy:
-  allow_implicit_invocation: true

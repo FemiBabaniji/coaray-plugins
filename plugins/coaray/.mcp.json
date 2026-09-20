@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "coaray-tenant": {
+      "type": "http",
+      "url": "https://mcp.coaray.com/api/mcp/chatgpt/mcp"
+    }
+  }
+}

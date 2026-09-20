@@ -1,6 +1,6 @@
-# Coaray Plugins
+# CoAray plugin marketplace
 
-Public Codex plugin marketplace maintained by Coaray.
+The public Codex marketplace for CoAray's private-MCP connector.
 
 ## Install
 
@@ -10,36 +10,32 @@ Add the marketplace from a terminal:
 codex plugin marketplace add FemiBabaniji/coaray-plugins
 ```
 
-Then restart the ChatGPT desktop app, open **Plugins**, select
-**Coaray Plugins**, and install the plugin you want. In Codex CLI, run
-`/plugins` after adding the marketplace.
+Restart the ChatGPT desktop app, open **Plugins**, select **CoAray**, and
+install **CoAray**. In Codex CLI, run `/plugins` after adding the marketplace.
 
-## Available plugins
+The public package contains one universal CoAray OAuth entrypoint. During
+installation, the user signs in and selects an organization they are
+authorized to access. CoAray then binds that authenticated session to the
+organization's custom private MCP. The package contains no tenant URLs,
+credentials, customer data, or hard-coded tool catalogue.
 
-### IRCC Document Mapper
+## What it provides
 
-Converts immigration documents into provenance-backed canonical IRCC JSON,
-validates people and timelines, compiles browser-ready page mappings, and
-prepares guarded browser-agent handoffs.
+After sign-in, ChatGPT or Codex discovers the tools exposed by that client's
+private MCP. The private MCP and the authenticated grant determine the tools,
+resources, and permissions available to the user.
 
-This plugin does not provide legal advice or submit immigration forms. Review
-all extracted information before using it in an application.
+## Update
 
-## Updating
-
-Refresh all configured marketplaces:
-
-```bash
-codex plugin marketplace upgrade
-```
-
-Or refresh only this marketplace:
+Refresh the marketplace with:
 
 ```bash
 codex plugin marketplace upgrade coaray
 ```
 
-## Source and licensing
+Then update or reinstall **CoAray** from the Plugins directory.
 
-The marketplace catalog is public so that Codex can install its plugins. Each
-plugin declares its own license in its manifest.
+## License
+
+The repository is public so Codex can install the plugin. The plugin remains
+proprietary and its manifest declares `UNLICENSED`.

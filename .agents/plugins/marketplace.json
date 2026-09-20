@@ -1,14 +1,14 @@
 {
   "name": "coaray",
   "interface": {
-    "displayName": "Coaray Plugins"
+    "displayName": "CoAray"
   },
   "plugins": [
     {
-      "name": "ircc-document-mapper",
+      "name": "coaray",
       "source": {
         "source": "local",
-        "path": "./plugins/ircc-document-mapper"
+        "path": "./plugins/coaray"
       },
       "policy": {
         "installation": "AVAILABLE",
