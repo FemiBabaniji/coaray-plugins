@@ -1,45 +1,49 @@
-# Coaray for ChatGPT and Codex
+# CoAray for ChatGPT desktop and Codex
 
-Use your firm's approved workflows and connected tools without leaving your
-conversation.
+Connect your firm's approved applications and workflows to your conversation.
 
-## Install
+## Set up on Mac
 
-Add the marketplace from a terminal:
+1. Accept the invitation from your firm using the account it invited.
+2. Open [CoAray setup](https://mcp.coaray.com/plugins/coaray) and download the signed Mac setup app.
+3. Open **CoAray Setup**, select **Continue**, then install **CoAray** on the desktop plugin page.
+4. Select **Connect**, sign in as your invited account, choose your firm, and review the access requested.
+5. Start a new conversation and ask **Open my firm workspace**.
 
-```bash
-codex plugin marketplace add FemiBabaniji/coaray-plugins
-```
+The installer supports macOS 14 or later and requires a current ChatGPT desktop/Codex app with plugin support. It adds and refreshes this public marketplace using the host's bundled CLI. It does not collect passwords, accept OAuth grants, or modify firm permissions. Retry setup safely if the connection fails. If installation is managed by your organization, contact its administrator.
 
-Restart the ChatGPT desktop app, open **Plugins**, select **Coaray**, and
-install **Coaray**. In Codex CLI, run `/plugins` after adding the marketplace.
+## Other desktop setup options
 
-## What happens when you sign in
-
-Sign in with your work account and choose a firm you are authorized to access.
-Coaray then makes that firm's enabled workflows and tools available to you.
-Your firm's permissions, review rules, and connected-system access still
-apply.
-
-## For administrators
-
-This public package is only the authenticated entry point to Coaray. It does
-not contain client data, credentials, client-specific service addresses, or a
-fixed catalogue of tools. After sign-in, the Coaray service determines the
-capabilities available from the firm's configuration and the user's grant.
-The firm's connected systems remain the authoritative source for their data.
-
-## Update
-
-Refresh the marketplace with:
+With a supported Codex CLI:
 
 ```bash
+codex plugin marketplace add https://github.com/FemiBabaniji/coaray-plugins.git
 codex plugin marketplace upgrade coaray
 ```
 
-Then update or reinstall **Coaray** from the Plugins directory.
+Open the desktop Plugins Directory, select **CoAray**, and install the plugin. Restart the desktop app if the marketplace is not visible. The CLI also supports `codex plugin add coaray@coaray`; complete authentication in your host and start a new conversation afterward.
+
+This marketplace is a desktop distribution channel. It does not make a private plugin available to external personal accounts on ChatGPT web. Available tools depend on the desktop host and plan. Fresh external personal-account verification is pending; the repository alone does not establish that account/surface matrix.
+
+## Private access
+
+This public package contains presentation metadata and generic skills. Firm identity, client records, credentials, invitations and permissions stay in CoAray's authenticated service. Installing the package grants no data access. Sign in with the invited identity; the service checks current membership, enabled email access and consented tools on every request. A new package version cannot expand an existing OAuth grant.
+
+For an expired invitation, ask the firm for a new invitation. For an unexpected account, switch to the invited identity during OAuth. For revoked access, ask the firm administrator. Reinstalling the plugin does not restore removed permissions.
+
+## Updates and rollback
+
+Run the latest setup app, or `codex plugin marketplace upgrade coaray`, then refresh or reinstall CoAray and start a new conversation. Releases use immutable version tags; previous versions remain retrievable. The default marketplace tracks `main`.
+
+To pin a previous release, remove this marketplace source and add it using an existing release tag:
+
+```bash
+codex plugin marketplace remove coaray
+codex plugin marketplace add https://github.com/FemiBabaniji/coaray-plugins.git --ref v1.2.1
+```
+
+Then refresh or reinstall CoAray. This changes package delivery, not your firm's grants. Administrators can roll the default channel back by reverting its release commit; release tags must not be moved.
 
 ## License
 
-The repository is public so Codex can install the plugin. The plugin remains
-proprietary and its manifest declares `UNLICENSED`.
+The repository is public so supported desktop hosts can retrieve the plugin. The plugin remains proprietary (`UNLICENSED`).
