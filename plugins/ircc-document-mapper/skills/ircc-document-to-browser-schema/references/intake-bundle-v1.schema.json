@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.coaray.com/ircc/intake-bundle-v1.schema.json",
+  "title": "Coaray IRCC semantic intake bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "createdAt",
+    "case",
+    "sources",
+    "people",
+    "semanticSchema",
+    "semanticData",
+    "claimLedger",
+    "conflicts",
+    "unmappedClaims",
+    "validationIssues",
+    "browserHandoff"
+  ],
+  "properties": {
+    "schema": { "const": "coaray.ircc-semantic-intake.v1" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "case": { "$ref": "#/$defs/case" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "people": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/person" }
+    },
+    "semanticSchema": { "$ref": "#/$defs/semanticSchema" },
+    "semanticData": { "$ref": "#/$defs/semanticData" },
+    "formMap": { "$ref": "#/$defs/formMapReference" },
+    "pages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/page" }
+    },
+    "claimLedger": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    },
+    "unmappedClaims": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "validationIssues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    },
+    "browserHandoff": { "$ref": "#/$defs/browserHandoff" }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+        }
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "valueState": {
+      "enum": [
+        "answered",
+        "unknown",
+        "not_provided",
+        "not_applicable",
+        "needs_confirmation"
+      ]
+    },
+    "role": {
+      "enum": [
+        "principal_applicant",
+        "spouse",
+        "child",
+        "dependent",
+        "related_person"
+      ]
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["caseKey", "route", "sourceLanguage"],
+      "properties": {
+        "caseKey": { "type": "string", "minLength": 1 },
+        "route": { "enum": ["express_entry", "pnp_non_express_entry"] },
+        "program": { "type": ["string", "null"] },
+        "sourceLanguage": { "type": "string", "minLength": 2 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceKey",
+        "filename",
+        "mediaType",
+        "contentDigest",
+        "extractionMethod",
+        "qualityWarnings"
+      ],
+      "properties": {
+        "sourceKey": { "type": "string", "minLength": 1 },
+        "filename": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "contentDigest": { "$ref": "#/$defs/digest" },
+        "extractionMethod": {
+          "enum": ["native_text", "ocr", "spreadsheet", "structured_data", "manual"]
+        },
+        "qualityWarnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["personKey", "role", "sourceLocators"],
+      "properties": {
+        "personKey": { "type": "string", "minLength": 1 },
+        "role": { "$ref": "#/$defs/role" },
+        "sourceLocators": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "fieldDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fieldKey", "entityType", "valueType", "cardinality", "sensitivity"],
+      "properties": {
+        "fieldKey": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]+$" },
+        "entityType": { "enum": ["case", "person", "record"] },
+        "valueType": { "type": "string", "minLength": 1 },
+        "cardinality": { "enum": ["one", "many"] },
+        "sensitivity": { "enum": ["standard", "personal", "sensitive", "restricted"] },
+        "storage": { "enum": ["inline", "secure_ref"] },
+        "validation": { "$ref": "#/$defs/jsonValue" },
+        "normalization": { "$ref": "#/$defs/jsonValue" }
+      }
+    },
+    "semanticSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaId", "version"],
+      "properties": {
+        "schemaId": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1 },
+        "digest": { "$ref": "#/$defs/digest" },
+        "fieldDefinitionsSnapshot": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fieldDefinition" }
+        }
+      }
+    },
+    "fieldValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "sourceClaimKeys", "confidence", "reviewStatus"],
+      "properties": {
+        "state": { "$ref": "#/$defs/valueState" },
+        "value": { "$ref": "#/$defs/jsonValue" },
+        "sourceValue": { "$ref": "#/$defs/jsonValue" },
+        "secureValueRef": { "type": "string", "minLength": 1 },
+        "sourceClaimKeys": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reviewStatus": { "enum": ["pending", "reviewed", "rejected"] }
+      }
+    },
+    "fieldHead": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subjectKey",
+        "fieldKey",
+        "fieldRevision",
+        "updatedAt",
+        "state",
+        "value",
+        "sourceClaimKeys",
+        "confidence",
+        "reviewStatus"
+      ],
+      "properties": {
+        "subjectKey": { "type": "string", "minLength": 1 },
+        "fieldKey": { "type": "string", "minLength": 3 },
+        "fieldRevision": { "type": "integer", "minimum": 1 },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "state": { "$ref": "#/$defs/valueState" },
+        "value": { "$ref": "#/$defs/jsonValue" },
+        "sourceValue": { "$ref": "#/$defs/jsonValue" },
+        "secureValueRef": { "type": "string", "minLength": 1 },
+        "sourceClaimKeys": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reviewStatus": { "enum": ["pending", "reviewed", "rejected"] }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordKey", "subjectKey", "recordKind", "semanticKey", "state", "fields", "recordRevision"],
+      "properties": {
+        "recordKey": { "type": "string", "minLength": 1 },
+        "subjectKey": { "type": "string", "minLength": 1 },
+        "recordKind": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "state": { "$ref": "#/$defs/valueState" },
+        "fields": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/fieldValue" }
+        },
+        "recordRevision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "subjectKey", "operation", "sourceClaimKeys", "changedAt"],
+      "properties": {
+        "revision": { "type": "integer", "minimum": 1 },
+        "subjectKey": { "type": "string", "minLength": 1 },
+        "fieldKey": { "type": "string", "minLength": 3 },
+        "recordKey": { "type": "string", "minLength": 1 },
+        "operation": { "enum": ["set", "supersede", "add_record", "update_record", "remove_record"] },
+        "previousRevision": { "type": ["integer", "null"], "minimum": 1 },
+        "sourceClaimKeys": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "changedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "semanticData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "fieldHeads", "records", "changeLog"],
+      "properties": {
+        "revision": { "type": "integer", "minimum": 1 },
+        "fieldHeads": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fieldHead" }
+        },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/record" }
+        },
+        "changeLog": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/change" }
+        }
+      }
+    },
+    "claimTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subjectKey"],
+      "properties": {
+        "subjectKey": { "type": "string", "minLength": 1 },
+        "fieldKey": { "type": "string", "minLength": 3 },
+        "recordKey": { "type": "string", "minLength": 1 },
+        "recordKind": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "recordFieldKey": { "type": "string", "minLength": 1 }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claimKey",
+        "personKey",
+        "sourceKey",
+        "sourceLocator",
+        "sourceValue",
+        "normalizedValue",
+        "state",
+        "disposition",
+        "confidence",
+        "reason"
+      ],
+      "properties": {
+        "claimKey": { "type": "string", "minLength": 1 },
+        "personKey": { "type": "string", "minLength": 1 },
+        "sourceKey": { "type": "string", "minLength": 1 },
+        "sourceLocator": { "type": "string", "minLength": 1 },
+        "sourceValue": { "$ref": "#/$defs/jsonValue" },
+        "normalizedValue": { "$ref": "#/$defs/jsonValue" },
+        "state": { "$ref": "#/$defs/valueState" },
+        "disposition": { "enum": ["mapped", "irrelevant", "conflict", "unmapped"] },
+        "target": { "$ref": "#/$defs/claimTarget" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issueKey", "kind", "message", "blocking", "claimKeys"],
+      "properties": {
+        "issueKey": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "blocking": { "type": "boolean" },
+        "claimKeys": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "formMapReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packId", "version", "digest", "mappingSupport"],
+      "properties": {
+        "packId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "mappingSupport": { "enum": ["semantic_only", "observed", "live_verified"] }
+      }
+    },
+    "pageValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mappingKey", "questionKey", "state", "value", "required", "source"],
+      "properties": {
+        "mappingKey": { "type": "string", "minLength": 1 },
+        "questionKey": { "type": "string", "minLength": 1 },
+        "targetFieldKey": { "type": ["string", "null"] },
+        "state": { "$ref": "#/$defs/valueState" },
+        "value": { "$ref": "#/$defs/jsonValue" },
+        "required": { "type": "boolean" },
+        "source": { "$ref": "#/$defs/jsonValue" }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pageKey",
+        "personKey",
+        "formMapVersion",
+        "compiledFromSemanticRevision",
+        "values"
+      ],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "personKey": { "type": "string", "minLength": 1 },
+        "formMapVersion": { "type": "string", "minLength": 1 },
+        "compiledFromSemanticRevision": { "type": "integer", "minimum": 1 },
+        "fieldBindings": { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        "actionBindings": { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        "values": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/pageValue" }
+        }
+      }
+    },
+    "browserHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedOrigins", "mappingSupport", "readiness", "blockers"],
+      "properties": {
+        "allowedOrigins": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "format": "uri" }
+        },
+        "mappingSupport": { "enum": ["semantic_only", "observed", "live_verified"] },
+        "readiness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["semanticReady", "browserReadReady", "browserWriteReady"],
+          "properties": {
+            "semanticReady": { "type": "boolean" },
+            "browserReadReady": { "type": "boolean" },
+            "browserWriteReady": { "type": "boolean" }
+          }
+        },
+        "nextPageKey": { "type": ["string", "null"] },
+        "nextPersonKey": { "type": ["string", "null"] },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

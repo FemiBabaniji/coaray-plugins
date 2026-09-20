@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.coaray.com/ircc/form-map-pack-v1.schema.json",
+  "title": "Coaray IRCC semantic form-map pack v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "packId",
+    "version",
+    "route",
+    "semanticSchema",
+    "portal",
+    "coverage",
+    "pages",
+    "mappings",
+    "questionDefinitions",
+    "renderings",
+    "fieldBindings",
+    "actionBindings",
+    "roleBindings",
+    "recordKinds",
+    "publication"
+  ],
+  "properties": {
+    "schema": { "const": "coaray.ircc-form-map-pack.v1" },
+    "packId": { "type": "string", "minLength": 1 },
+    "version": { "$ref": "#/$defs/semver" },
+    "route": { "enum": ["express_entry", "pnp_non_express_entry"] },
+    "semanticSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaId", "version"],
+      "properties": {
+        "schemaId": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "portal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedOrigins", "locale", "observedAt", "mappingSupport"],
+      "properties": {
+        "allowedOrigins": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "format": "uri" }
+        },
+        "locale": { "type": "string", "minLength": 2 },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "portalFingerprint": { "type": ["string", "null"] },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "notes"],
+      "properties": {
+        "status": { "enum": ["initial", "complete"] },
+        "notes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/page" }
+    },
+    "mappings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mapping" }
+    },
+    "questionDefinitions": { "type": "array", "items": { "$ref": "#/$defs/questionDefinition" } },
+    "renderings": { "type": "array", "items": { "$ref": "#/$defs/rendering" } },
+    "fieldBindings": { "type": "array", "items": { "$ref": "#/$defs/fieldBinding" } },
+    "actionBindings": { "type": "array", "items": { "$ref": "#/$defs/actionBinding" } },
+    "roleBindings": { "type": "array", "items": { "$ref": "#/$defs/roleBinding" } },
+    "recordKinds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageCount", "questionCount", "fieldBindingCount", "actionBindingCount", "roleBindingCount", "normalizedRecordKindCount", "catalogueDigest"],
+      "properties": {
+        "pageCount": { "type": "integer", "minimum": 1 },
+        "questionCount": { "type": "integer", "minimum": 1 },
+        "fieldBindingCount": { "type": "integer", "minimum": 1 },
+        "actionBindingCount": { "type": "integer", "minimum": 0 },
+        "roleBindingCount": { "type": "integer", "minimum": 1 },
+        "normalizedRecordKindCount": { "type": "integer", "minimum": 1 },
+        "catalogueDigest": { "$ref": "#/$defs/digest" }
+      }
+    }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/jsonValue" } }
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "mappingSupport": {
+      "enum": ["semantic_only", "observed", "live_verified"]
+    },
+    "role": {
+      "enum": ["principal_applicant", "spouse", "child", "dependent", "related_person"]
+    },
+    "condition": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "fieldKey"],
+          "properties": {
+            "op": { "const": "exists" },
+            "fieldKey": { "type": "string", "minLength": 3 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "fieldKey", "value"],
+          "properties": {
+            "op": { "const": "equals" },
+            "fieldKey": { "type": "string", "minLength": 3 },
+            "value": { "$ref": "#/$defs/jsonValue" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "conditions"],
+          "properties": {
+            "op": { "enum": ["and", "or"] },
+            "conditions": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/condition" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "condition"],
+          "properties": {
+            "op": { "const": "not" },
+            "condition": { "$ref": "#/$defs/condition" }
+          }
+        }
+      ]
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageKey", "displayOrder", "roles", "condition"],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "sectionKey": { "type": "string", "minLength": 1 },
+        "displayName": { "type": "string", "minLength": 1 },
+        "portalSectionValue": { "type": "string", "minLength": 1 },
+        "displayOrder": { "type": "integer", "minimum": 1 },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/role" }
+        },
+        "condition": { "$ref": "#/$defs/condition" },
+        "routeContract": { "type": "object" },
+        "pageSignature": { "type": ["string", "null"] },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" }
+      }
+    },
+    "fieldSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "fieldKey"],
+      "properties": {
+        "kind": { "const": "field" },
+        "fieldKey": { "type": "string", "minLength": 3 }
+      }
+    },
+    "recordSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "recordKind", "semanticKey", "fieldKey"],
+      "properties": {
+        "kind": { "const": "record" },
+        "recordKind": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "fieldKey": { "type": "string", "minLength": 1 }
+      }
+    },
+    "transform": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "identity" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "date_parts" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "options"],
+          "properties": {
+            "kind": { "const": "option_lookup" },
+            "options": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+            }
+          }
+        }
+      ]
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mappingKey",
+        "pageKey",
+        "roles",
+        "target",
+        "source",
+        "condition",
+        "transform",
+        "required",
+        "mappingSupport"
+      ],
+      "properties": {
+        "mappingKey": { "type": "string", "minLength": 1 },
+        "pageKey": { "type": "string", "minLength": 1 },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/role" }
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["questionKey"],
+          "properties": {
+            "questionKey": { "type": "string", "minLength": 1 },
+            "fieldKey": { "type": ["string", "null"] }
+          }
+        },
+        "source": {
+          "oneOf": [
+            { "$ref": "#/$defs/fieldSource" },
+            { "$ref": "#/$defs/recordSource" }
+          ]
+        },
+        "condition": { "$ref": "#/$defs/condition" },
+        "transform": { "$ref": "#/$defs/transform" },
+        "required": { "type": "boolean" },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" }
+      }
+    },
+    "questionDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semanticKey", "answerType", "cardinality", "normalizedRecordKind", "sensitivity", "description"],
+      "properties": {
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "answerType": { "type": "string", "minLength": 1 },
+        "cardinality": { "enum": ["one", "many"] },
+        "normalizedRecordKind": { "type": ["string", "null"] },
+        "sensitivity": { "enum": ["standard", "personal", "sensitive", "restricted"] },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "rendering": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageKey", "semanticKey", "prompt", "required", "repeatable", "displayOrder", "condition", "mappingSupport"],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "prompt": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "repeatable": { "type": "boolean" },
+        "displayOrder": { "type": "integer", "minimum": 1 },
+        "condition": { "$ref": "#/$defs/condition" },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" }
+      }
+    },
+    "fieldBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageKey", "semanticKey", "bindingKey", "sourceScope", "sourcePath", "controlKind", "displayOrder", "recordFilter", "precisionPath", "portalFieldKey", "mappingSupport"],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "bindingKey": { "type": "string", "minLength": 1 },
+        "sourceScope": { "enum": ["answer_value", "normalized_record_value"] },
+        "sourcePath": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "controlKind": { "type": "string", "minLength": 1 },
+        "displayOrder": { "type": "integer", "minimum": 1 },
+        "recordFilter": { "type": "object" },
+        "precisionPath": { "oneOf": [{ "type": "null" }, { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }] },
+        "portalFieldKey": { "type": ["string", "null"] },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" }
+      }
+    },
+    "actionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageKey", "semanticKey", "actionKey", "portalActionKey", "actionContract", "verificationContract", "humanConfirmationRequired", "mappingSupport", "displayOrder"],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "actionKey": { "enum": ["save_and_add", "save_and_exit", "verify_result_row"] },
+        "portalActionKey": { "type": ["string", "null"] },
+        "actionContract": { "type": "object" },
+        "verificationContract": { "type": "object" },
+        "humanConfirmationRequired": { "type": "boolean" },
+        "mappingSupport": { "$ref": "#/$defs/mappingSupport" },
+        "displayOrder": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "roleBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pageKey", "semanticKey", "role"],
+      "properties": {
+        "pageKey": { "type": "string", "minLength": 1 },
+        "semanticKey": { "type": "string", "minLength": 3 },
+        "role": { "$ref": "#/$defs/role" }
+      }
+    }
+  }
+}
