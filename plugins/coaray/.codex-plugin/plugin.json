@@ -1,9 +1,9 @@
 {
   "name": "coaray",
-  "version": "1.2.0",
-  "description": "Connect ChatGPT and Codex to your organization's private MCP.",
+  "version": "1.2.1",
+  "description": "Use your firm's approved workflows and connected tools in ChatGPT and Codex.",
   "author": {
-    "name": "CoAray",
+    "name": "Coaray",
     "email": "hello@coaray.com",
     "url": "https://coaray.com"
   },
@@ -17,10 +17,10 @@
   ],
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "CoAray",
-    "shortDescription": "Connect securely to your private MCP.",
-    "longDescription": "Sign in through CoAray to connect ChatGPT and Codex to the custom private MCP configured for your organization. The authenticated connection determines the available tools and permissions.",
-    "developerName": "CoAray",
+    "displayName": "Coaray",
+    "shortDescription": "Bring your firm's approved workflows into ChatGPT.",
+    "longDescription": "Work with the information, tools, and tested workflows your firm has approved through Coaray—without leaving ChatGPT. Sign in with your work account; your firm's access, permissions, and review rules continue to apply.",
+    "developerName": "Coaray",
     "category": "Productivity",
     "capabilities": [
       "Connected"
@@ -29,9 +29,9 @@
     "privacyPolicyURL": "https://www.coaray.com/legal/privacy",
     "termsOfServiceURL": "https://www.coaray.com/legal/terms",
     "defaultPrompt": [
-      "Show the tools available from my private MCP.",
-      "Explain what this private MCP connection can access.",
-      "Use my connected private MCP for this task."
+      "Show me the workflows available to me.",
+      "Help me prepare for my next client appointment.",
+      "Use our firm's approved workflow for this task."
     ],
     "brandColor": "#14532D",
     "composerIcon": "./assets/coaray-192.png",

@@ -1,7 +1,7 @@
 {
   "name": "coaray",
   "interface": {
-    "displayName": "CoAray"
+    "displayName": "Coaray"
   },
   "plugins": [
     {

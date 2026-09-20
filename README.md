@@ -1,6 +1,7 @@
-# CoAray plugin marketplace
+# Coaray for ChatGPT and Codex
 
-The public Codex marketplace for CoAray's private-MCP connector.
+Use your firm's approved workflows and connected tools without leaving your
+conversation.
 
 ## Install
 
@@ -10,20 +11,23 @@ Add the marketplace from a terminal:
 codex plugin marketplace add FemiBabaniji/coaray-plugins
 ```
 
-Restart the ChatGPT desktop app, open **Plugins**, select **CoAray**, and
-install **CoAray**. In Codex CLI, run `/plugins` after adding the marketplace.
+Restart the ChatGPT desktop app, open **Plugins**, select **Coaray**, and
+install **Coaray**. In Codex CLI, run `/plugins` after adding the marketplace.
 
-The public package contains one universal CoAray OAuth entrypoint. During
-installation, the user signs in and selects an organization they are
-authorized to access. CoAray then binds that authenticated session to the
-organization's custom private MCP. The package contains no tenant URLs,
-credentials, customer data, or hard-coded tool catalogue.
+## What happens when you sign in
 
-## What it provides
+Sign in with your work account and choose a firm you are authorized to access.
+Coaray then makes that firm's enabled workflows and tools available to you.
+Your firm's permissions, review rules, and connected-system access still
+apply.
 
-After sign-in, ChatGPT or Codex discovers the tools exposed by that client's
-private MCP. The private MCP and the authenticated grant determine the tools,
-resources, and permissions available to the user.
+## For administrators
+
+This public package is only the authenticated entry point to Coaray. It does
+not contain client data, credentials, client-specific service addresses, or a
+fixed catalogue of tools. After sign-in, the Coaray service determines the
+capabilities available from the firm's configuration and the user's grant.
+The firm's connected systems remain the authoritative source for their data.
 
 ## Update
 
@@ -33,7 +37,7 @@ Refresh the marketplace with:
 codex plugin marketplace upgrade coaray
 ```
 
-Then update or reinstall **CoAray** from the Plugins directory.
+Then update or reinstall **Coaray** from the Plugins directory.
 
 ## License
 
