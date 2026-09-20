@@ -12,6 +12,20 @@ Connect your firm's approved applications and workflows to your conversation.
 
 The installer supports macOS 14 or later and requires a current ChatGPT desktop/Codex app with plugin support. It adds and refreshes this public marketplace using the host's bundled CLI. It does not collect passwords, accept OAuth grants, or modify firm permissions. Retry setup safely if the connection fails. If installation is managed by your organization, contact its administrator.
 
+## Install with npm (no Mac setup app)
+
+With Node.js 20 or later and a current ChatGPT desktop or Codex installation:
+
+```bash
+npx --yes github:FemiBabaniji/coaray-plugins#setup-v1.0.0
+```
+
+This npm command uses the versioned public GitHub package; no npm or GitHub account is required. It adds and refreshes the CoAray marketplace and installs the plugin through the host's CLI. It does not download or open the Mac setup app. npm still retrieves the small setup package and the host retrieves the plugin files.
+
+After setup, open **CoAray** in the desktop Plugins Directory, choose **Connect**, and sign in with your invited account. Start a new conversation. If the plugin is not visible, restart the desktop app. OAuth and your firm's permissions are required with either installation route.
+
+To check desktop support without changing installed plugins, append `--check`. Set `COARAY_CODEX_BIN` to an installed Codex executable if it is in a custom location. The npm route is verified on macOS; other desktop platforms still need end-to-end validation. This command does not enable personal ChatGPT web installation.
+
 ## Other desktop setup options
 
 With a supported Codex CLI:
