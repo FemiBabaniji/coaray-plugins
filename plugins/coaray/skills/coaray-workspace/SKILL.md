@@ -4,8 +4,10 @@ description: Open the connected firm's workspace or show its current skills when
 metadata:
   coaray:
     title: CoAray Workspace
-    version: 2
+    version: 3
     tools:
+      - coaray.skills.list
+      - coaray.skills.read
       - coaray.apps.list
     apps: []
     nativeCapabilities: []
@@ -14,8 +16,8 @@ metadata:
 
 # Open the firm workspace
 
-Use the connected CoAray Skills MCP server's live prompt catalogue to show the firm's current Skills. The bundled skill files are install-time guidance, not proof that a provider Tool is available now. Choose the matching live Skill and only the Tools it reports as available for the current connection.
+Call `coaray.skills.list` with `{}` to show the firm's live Skill catalogue. For the selected skill, call `coaray.skills.read` with its exact `skillKey` before choosing any operation. The bundled skill files are install-time guidance, not proof that a provider Tool is available now. Use only Tools reported as available for this connection.
 
-If the host cannot show MCP prompts, call `coaray.apps.list` with `{}` to present the available application viewer. Prefer the connected plugin over duplicate direct MCP connections. Do not claim the app viewer is a substitute for the live Skills registry.
+If the live Skills server is unavailable, say so; do not treat bundled skills or the application viewer as a live grant. For an application viewer request, call `coaray.apps.list` with `{}`. Prefer the connected plugin over duplicate direct MCP connections.
 
 If authentication is required, use the host's plugin connection controls. Opening a workspace or Skill catalogue does not authorize a record change, a DocuSign draft, or sending an envelope.
