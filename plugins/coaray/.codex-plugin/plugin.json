@@ -1,6 +1,6 @@
 {
   "name": "coaray",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Use your firm's approved workflows and connected tools in ChatGPT and Codex.",
   "author": {
     "name": "CoAray",
@@ -15,7 +15,14 @@
       "type": "http",
       "url": "https://mcp.coaray.com/api/mcp/chatgpt/mcp",
       "http_headers": {
-        "X-Coaray-Plugin-Version": "1.5.0"
+        "X-Coaray-Plugin-Version": "1.6.0"
+      }
+    },
+    "coaray-skills": {
+      "type": "http",
+      "url": "https://mcp.coaray.com/api/mcp/skills/mcp",
+      "http_headers": {
+        "X-Coaray-Plugin-Version": "1.6.0"
       }
     }
   },
