@@ -1,6 +1,6 @@
 {
   "name": "coaray",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Use your firm's approved workflows and connected tools in ChatGPT and Codex.",
   "author": {
     "name": "CoAray",
@@ -9,20 +9,19 @@
   "homepage": "https://coaray.com",
   "repository": "https://github.com/FemiBabaniji/coaray-plugins",
   "license": "UNLICENSED",
-  "skills": "./skills/",
   "mcpServers": {
     "coaray-tenant": {
       "type": "http",
       "url": "https://mcp.coaray.com/api/mcp/chatgpt/mcp",
       "http_headers": {
-        "X-Coaray-Plugin-Version": "1.6.0"
+        "X-Coaray-Plugin-Version": "1.7.0"
       }
     },
     "coaray-skills": {
       "type": "http",
       "url": "https://mcp.coaray.com/api/mcp/skills/mcp",
       "http_headers": {
-        "X-Coaray-Plugin-Version": "1.6.0"
+        "X-Coaray-Plugin-Version": "1.7.0"
       }
     }
   },
@@ -37,7 +36,7 @@
     "composerIcon": "./assets/coaray-192.png",
     "logo": "./assets/coaray-512.png",
     "logoDark": "./assets/coaray-512.png",
-    "websiteURL": "https://mcp.coaray.com/plugins/coaray",
+    "websiteURL": "https://app.coaray.com/plugins/coaray",
     "privacyPolicyURL": "https://www.coaray.com/legal/privacy",
     "termsOfServiceURL": "https://www.coaray.com/legal/terms",
     "shortDescription": "Your firm's judgment, in every conversation.",
