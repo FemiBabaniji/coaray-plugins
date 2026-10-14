@@ -1,0 +1,13 @@
+{
+  "name": "coaray-skills",
+  "version": "1.0.0",
+  "description": "Use your firm's Coaray Skills and connected tools with your own Coaray sign-in.",
+  "author": {
+    "name": "Coaray"
+  },
+  "homepage": "https://coaray.com",
+  "license": "UNLICENSED",
+  "logo": "assets/coaray-192.png",
+  "keywords": ["coaray", "skills", "legal", "mcp"],
+  "mcpServers": "mcp.json"
+}

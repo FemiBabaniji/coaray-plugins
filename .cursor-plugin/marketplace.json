@@ -1,0 +1,14 @@
+{
+  "name": "coaray",
+  "owner": {
+    "name": "Coaray"
+  },
+  "plugins": [
+    {
+      "name": "coaray-skills",
+      "source": "plugins/coaray-grok",
+      "description": "Use your firm's Coaray Skills with your own Coaray sign-in.",
+      "logo": "plugins/coaray-grok/assets/coaray-192.png"
+    }
+  ]
+}
