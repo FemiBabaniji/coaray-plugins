@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "coaray-skills": {
+      "url": "https://mcp.coaray.com/api/mcp/skills/mcp"
+    }
+  }
+}
